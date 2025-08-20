@@ -5,12 +5,15 @@ x-airflow-common:
   build: .
   image: airflow:latest
   environment:
+    HTTP_PROXY: http://10.6.33.38:8080
+    HTTPS_PROXY: http://10.6.33.38:8080
+    NO_PROXY: localhost,127.0.0.1,postgres,redis
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
     AIRFLOW__CORE__DAGS_FOLDER: /home/airflow/dags
     AIRFLOW__CORE__LOAD_EXAMPLES: "False"
     AIRFLOW__WEBSERVER__SECRET_KEY: "uWrC2euqrhM61u0NEgKSPXy4wnn1kaI8haMzpLiqciQ"
-    AIRFLOW_CONN_ORACLE_DEFAULT: 'oracle+cx_oracle://oracle_user:oracle_pass@oracle_host:1521/?service_name=ORCLPDB1'
+    ORACLE_CLIENT_LIB_DIR: /opt/oracle/instantclient
   volumes:
     - /opt/airflow/dags:/home/airflow/dags
     - /opt/airflow/code:/home/airflow/code
@@ -24,12 +27,19 @@ services:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
+      HTTP_PROXY: http://10.6.33.38:8080
+      HTTPS_PROXY: http://10.6.33.38:8080
+      NO_PROXY: localhost,127.0.0.1,airflow-webserver,airflow-scheduler,airflow-triggerer
     volumes:
       - postgres_db:/var/lib/postgresql/data
 
   redis:
     image: redis:7
-
+    environment:
+      HTTP_PROXY: http://10.6.33.38:8080
+      HTTPS_PROXY: http://10.6.33.38:8080
+      NO_PROXY: localhost,127.0.0.1,airflow-webserver,airflow-scheduler,airflow-triggerer
+      
   airflow-init:
     <<: *airflow-common
     depends_on:
