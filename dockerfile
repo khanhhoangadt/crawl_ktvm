@@ -4,7 +4,7 @@ FROM python:3.10
 RUN apt-get update && apt-get install -y \
     wget unzip curl gnupg ca-certificates jq \
     build-essential libffi-dev libssl-dev libpq-dev \
-    libxml2-dev libxslt1-dev libaio-dev alien \
+    libxml2-dev libxslt1-dev libaio-dev libaio1 alien \
     fonts-liberation libappindicator3-1 libasound2 \
     libatk-bridge2.0-0 libatk1.0-0 libcups2 \
     libdbus-1-3 libgdk-pixbuf-2.0-0 libnspr4 libnss3 \
@@ -78,7 +78,10 @@ RUN python -m venv /opt/oracle_venv && \
         six \
         pycparser \
         tzdata \
-        lxml
+        lxml \
+        ipython \
+        tabula \
+        pdfplumber 
 
 # 7. Cài thêm thư viện Python chung
 RUN pip install --no-cache-dir \
